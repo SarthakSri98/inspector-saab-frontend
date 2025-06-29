@@ -2,16 +2,15 @@
 
 chrome.runtime.onStartup.addListener(() => {
     // Service worker started: onStartup event triggered
-    initializeExtensionState();
     setupListeners();
 });
 
-// Function to initialize the extension's state
-function initializeExtensionState() {
-    // Initializing extension state...
-}
-
-// Function to set up listeners
+/**
+ * Sets up message listeners for extension communication.
+ * Handles messages between popup, content scripts, and background.
+ *
+ * @returns {void}
+ */
 function setupListeners() {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         // Message received in background.js
@@ -39,7 +38,12 @@ function setupListeners() {
     });
 }
 
-// 🔹 Save Active Tab Info in `chrome.storage.session`
+/**
+ * Saves information about the active tab to chrome storage.
+ *
+ * @param {Function} sendResponse - Callback function to send response.
+ * @returns {void}
+ */
 function saveActiveTabInfo(sendResponse) {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (tabs.length === 0) {
@@ -63,7 +67,12 @@ function saveActiveTabInfo(sendResponse) {
     });
 }
 
-// 🔹 Retrieve Active Tab Info
+/**
+ * Retrieves stored tab information from chrome storage.
+ *
+ * @param {Function} callback - Callback function to handle retrieved data.
+ * @returns {void}
+ */
 function getStoredTabInfo(callback) {
     chrome.storage.session.get(["activeTabInfo"], (data) => {
         if (!data.activeTabInfo) {
@@ -87,38 +96,12 @@ function getStoredTabInfo(callback) {
     });
 }
 
-// 🔹 Focus Window & Activate Stored Tab
-function focusWindowAndUseStoredTab(callback) {
-    getStoredTabInfo((storedTab) => {
-        if (!storedTab) {
-            console.error("No valid stored tab found.");
-            getFallbackActiveTab(callback); // Try to find an alternative tab
-            return;
-        }
-
-        const { tabId, windowId } = storedTab;
-
-        // First, focus the correct window
-        chrome.windows.update(windowId, { focused: true }, () => {
-            if (chrome.runtime.lastError) {
-                console.warn("Could not focus window. It might be closed.");
-            }
-
-            // Ensure tab is active
-            chrome.tabs.update(tabId, { active: true }, () => {
-                if (chrome.runtime.lastError) {
-                    console.error("Could not activate tab:", chrome.runtime.lastError.message);
-                    getFallbackActiveTab(callback);
-                } else {
-                    // Activated stored tab
-                    callback(tabId);
-                }
-            });
-        });
-    });
-}
-
-// 🔹 Handle Fallback: Find Another Active Tab If Stored Tab is Missing
+/**
+ * Finds a fallback active tab when stored tab is not available.
+ *
+ * @param {Function} callback - Callback function to handle found tab.
+ * @returns {void}
+ */
 function getFallbackActiveTab(callback) {
     chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
         if (tabs.length > 0) {
@@ -139,7 +122,14 @@ chrome.runtime.onConnect.addListener((port) => {
     });
 });
 
-// Function to apply changes to the correct tab
+/**
+ * Handles applying changes to the active tab based on instructions.
+ *
+ * @param {Object[]} instructions - Array of instructions to apply.
+ * @param {Object} handlers - Map of handler functions.
+ * @param {Function} sendResponse - Callback function to send response.
+ * @returns {void}
+ */
 function handleApplyChanges(instructions, currentHandler, sendResponse) {
     chrome.storage.session.get(["extensionTabInfo"], (data) => {
         const { tabId, activeTab } = data.extensionTabInfo || {};

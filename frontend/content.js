@@ -1,5 +1,14 @@
 const API_BASE_URL = 'https://inspectorsaab.onrender.com';
 
+/**
+ * Adds a reading progress bar to the page that updates based on scroll position.
+ *
+ * @param {string} selector - CSS selector for the progress bar element.
+ * @returns {void}
+ *
+ * @example
+ * addReadingProgressBarFn('.progress-bar');
+ */
 function addReadingProgressBarFn(selector) {
     const progressBar = document.querySelector(selector);
     if (!progressBar) return;
@@ -13,6 +22,15 @@ function addReadingProgressBarFn(selector) {
     progressBar.style.width = percentScrolled + '%';
 }
 
+/**
+ * Adds a "Back to Top" button that smoothly scrolls to the top of the page.
+ *
+ * @param {string} selector - CSS selector for the button element.
+ * @returns {void}
+ *
+ * @example
+ * addBackToTopButtonFn('#back-to-top');
+ */
 function addBackToTopButtonFn(selector) {
     const button = document.querySelector(selector);
     if (!button) return;
@@ -21,6 +39,16 @@ function addBackToTopButtonFn(selector) {
     document.body.appendChild(button);
 }
 
+/**
+ * Adds a dark mode toggle functionality to a button element.
+ * Creates a style element that inverts page colors while preserving media elements.
+ *
+ * @param {string} selector - CSS selector for the dark mode toggle button.
+ * @returns {void}
+ *
+ * @example
+ * addDarkModeFn('#dark-mode-toggle');
+ */
 function addDarkModeFn(selector) {
     // Find the button using the provided selector
     const button = document.querySelector(selector);
@@ -127,6 +155,23 @@ if (typeof handlersMap === 'undefined') {
     };
 }
 
+/**
+ * Processes and applies text highlighting based on provided content update instructions.
+ *
+ * @param {Object} contentUpdate - Object containing highlighting instructions.
+ * @param {string} contentUpdate.phrase - The text to highlight.
+ * @param {string} contentUpdate.parentSelector - CSS selector for parent element containing text.
+ * @param {string} contentUpdate.className - CSS class name to apply to highlight.
+ * @param {number} totalInstructions - Total number of highlight instructions to process.
+ * @returns {void}
+ *
+ * @example
+ * highlightTextFromJson({
+ *   phrase: "important text",
+ *   parentSelector: ".content",
+ *   className: "highlight-yellow"
+ * }, 1);
+ */
 function highlightTextFromJson(contentUpdate, totalInstructions) {
     // 🔍 Processing highlight
     if (!contentUpdate || !contentUpdate.phrase || !contentUpdate.parentSelector || !contentUpdate.className) {
@@ -165,7 +210,15 @@ function highlightTextFromJson(contentUpdate, totalInstructions) {
     }
 }
 
-// **Step 1: Get all text nodes inside the target parent**
+/**
+ * Retrieves all text nodes from a parent element that contain non-empty text.
+ *
+ * @param {HTMLElement} parent - The parent element to search within.
+ * @returns {Node[]} Array of text nodes found within the parent element.
+ *
+ * @example
+ * const textNodes = getTextNodes(document.querySelector('.content'));
+ */
 function getTextNodes(parent) {
     const nodes = [];
     const walker = document.createTreeWalker(parent, NodeFilter.SHOW_TEXT, {
@@ -178,7 +231,12 @@ function getTextNodes(parent) {
     return nodes;
 }
 
-// **Step 2: Apply highlights safely using `Range API`**
+/**
+ * Applies all queued text highlighting modifications using Range API.
+ * Falls back to innerHTML replacement if Range API fails.
+ *
+ * @returns {void}
+ */
 function applyAllModifications() {
     modificationsQueue.forEach(({ node, matchIndex, phrase, className }) => {
         if (matchIndex >= node.nodeValue.length) {
@@ -208,6 +266,12 @@ function applyAllModifications() {
     modificationsQueue = []; // Clear queue after applying
 }
 
+/**
+ * Injects CSS styles for all dynamically created highlight classes.
+ * Creates or updates a style element in the document head.
+ *
+ * @returns {void}
+ */
 function injectHighlightStyles() {
     let styleElement = document.getElementById("highlight-style");
 
@@ -235,7 +299,12 @@ function injectHighlightStyles() {
     styleElement.textContent = styles;
 }
 
-// Function to initialize the overlay in the DOM (runs once at extension start)
+/**
+ * Initializes the loading overlay element in the DOM.
+ * Creates the overlay if it doesn't exist and sets up its initial state.
+ *
+ * @returns {void}
+ */
 function initializeOverlay() {
     // Ensure the DOM is ready before adding elements
     if (document.readyState === "loading") {
@@ -312,7 +381,15 @@ if (document.readyState === "complete") {
 }
 
 
-// Show overlay with a custom message
+/**
+ * Shows the blocking overlay with a custom message.
+ *
+ * @param {string} [messageText="Processing... Please wait."] - Message to display in overlay.
+ * @returns {void}
+ *
+ * @example
+ * startBlockingOverlay("Analyzing page content...");
+ */
 function startBlockingOverlay(messageText = "Processing... Please wait.") {
     const overlay = document.getElementById('custom-blocking-overlay');
     const message = document.getElementById('custom-overlay-message');
@@ -324,7 +401,11 @@ function startBlockingOverlay(messageText = "Processing... Please wait.") {
     }
 }
 
-// Hide overlay when the task is complete
+/**
+ * Hides the blocking overlay.
+ *
+ * @returns {void}
+ */
 function endBlockingOverlay() {
     const overlay = document.getElementById('custom-blocking-overlay');
     if (overlay) {
@@ -334,6 +415,20 @@ function endBlockingOverlay() {
 }
 
 
+/**
+ * Executes a set of DOM manipulation instructions received from the extension.
+ *
+ * @param {Object} message - Message object containing instructions.
+ * @param {Object[]} message.instructions - Array of DOM manipulation instructions.
+ * @param {Object} message.handlers - Map of handler functions for different operations.
+ * @returns {Promise<void>}
+ *
+ * @example
+ * executeInstructions({
+ *   instructions: [{type: 'highlight', data: {...}}],
+ *   handlers: {highlight: fn}
+ * });
+ */
 async function executeInstructions(message) {
     const { instructions, currentHandler } = message;
     const { handlerName, trigger, context, selector: handlerSelector } = currentHandler || {};
@@ -433,7 +528,16 @@ async function executeInstructions(message) {
     endBlockingOverlay();
 }
 
-// Utility: Wait for elements to exist
+/**
+ * Waits for elements matching a selector to appear in the DOM.
+ *
+ * @param {string} selector - CSS selector to wait for.
+ * @param {number} [timeout=5000] - Maximum time to wait in milliseconds.
+ * @returns {Promise<Element[]>} Array of matched elements.
+ *
+ * @example
+ * const elements = await waitForElements('.dynamic-content', 3000);
+ */
 function waitForElements(selector, timeout = 5000) {
     return new Promise(resolve => {
         const interval = 100;
@@ -454,6 +558,18 @@ function waitForElements(selector, timeout = 5000) {
 }
 
 
+/**
+ * Creates a new DOM element with specified attributes and content.
+ *
+ * @param {Element[]} elements - Array of parent elements to create element in.
+ * @param {string} tagName - HTML tag name for new element.
+ * @param {Object} attributes - Key-value pairs of attributes to set.
+ * @param {string} html - Inner HTML content for new element.
+ * @returns {Element} The newly created element.
+ *
+ * @example
+ * createElement([parentDiv], 'div', {class: 'new-div'}, '<p>Content</p>');
+ */
 function createElement(elements, tagName, attributes, html) {
     if (!tagName || typeof tagName !== "string") {
         console.warn("Invalid tagName:", tagName);
@@ -477,8 +593,18 @@ function createElement(elements, tagName, attributes, html) {
     });
 }
 
-// Utility: Create a new element and append to elements
-// html can be empty string like for addReadingProgressBar
+/**
+ * Creates and appends a new element to specified parent elements.
+ *
+ * @param {Element[]} parent - Array of parent elements.
+ * @param {string} [html=""] - HTML content for new element.
+ * @param {Object} [styles={}] - CSS styles to apply.
+ * @param {Object} [attributes={}] - HTML attributes to set.
+ * @returns {Promise<void>}
+ *
+ * @example
+ * await handleCreateElement([parentDiv], '<p>New content</p>', {color: 'red'});
+ */
 async function handleCreateElement(parent, html = "", styles = {}, attributes = {}) {
     if (!parent || typeof html !== "string") {
         console.warn("Invalid parent element or HTML:", parent, html);
@@ -541,7 +667,16 @@ async function handleCreateElement(parent, html = "", styles = {}, attributes = 
 }
 
 
-// Extract targeted HTML based on description
+/**
+ * Extracts specific HTML content based on a text description.
+ *
+ * @param {string} description - Text description of content to extract.
+ * @param {string} html - HTML string to search within.
+ * @returns {string} Extracted HTML content.
+ *
+ * @example
+ * const content = extractTargetedHtml('first paragraph', '<div><p>First</p><p>Second</p></div>');
+ */
 function extractTargetedHtml(description, html) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
@@ -587,7 +722,17 @@ function extractTargetedHtml(description, html) {
 }
 
 
-// Utility: Check if an element is visible
+/**
+ * Checks if an element is visible in the viewport.
+ *
+ * @param {Element} el - Element to check visibility of.
+ * @returns {boolean} True if element is visible.
+ *
+ * @example
+ * if (isVisible(element)) {
+ *   // Element is visible, do something
+ * }
+ */
 function isVisible(el) {
     const style = window.getComputedStyle(el);
     return (
@@ -597,7 +742,16 @@ function isVisible(el) {
     );
 }
 
-// Utility: Apply styles to elements
+/**
+ * Updates CSS styles for specified elements.
+ *
+ * @param {Element[]} elements - Elements to update styles for.
+ * @param {Object} styles - CSS styles to apply.
+ * @returns {Promise<void>}
+ *
+ * @example
+ * await handleUpdateStyle([element], {backgroundColor: 'red'});
+ */
 async function handleUpdateStyle(elements, styles) {
     if (!styles || typeof styles !== "object") {
         console.warn("Invalid styles object:", styles);
@@ -609,6 +763,16 @@ async function handleUpdateStyle(elements, styles) {
     console.log("Styles updated successfully.");
 }
 
+/**
+ * Appends HTML content to specified elements.
+ *
+ * @param {Element[]} elements - Elements to append content to.
+ * @param {string} html - HTML content to append.
+ * @returns {void}
+ *
+ * @example
+ * appendChildToElements([container], '<div>New content</div>');
+ */
 function appendChildToElements(elements, html) {
     if (typeof html !== "string") {
         console.warn("Invalid HTML:", html);
@@ -619,7 +783,18 @@ function appendChildToElements(elements, html) {
     });
 }
 
-// Utility: Add event listeners to elements
+/**
+ * Adds an event listener to elements with specified handler.
+ *
+ * @param {Element[]} element - Elements to add listener to.
+ * @param {string} event - Event name (e.g., 'click').
+ * @param {string} handlerName - Name of handler function.
+ * @param {string} handlerSelector - CSS selector for handler target.
+ * @returns {Promise<void>}
+ *
+ * @example
+ * await handleAddEventListener([button], 'click', 'toggleDarkMode', '#dark-mode');
+ */
 async function handleAddEventListener(element, event, handlerName, handlerSelector) {
     if (!event || typeof event !== "string" || typeof handlerName !== "string") {
         console.warn("Invalid event or handler name:", event, handlerName);
@@ -643,6 +818,16 @@ async function handleAddEventListener(element, event, handlerName, handlerSelect
     }
 }
 
+/**
+ * Sets text content for specified elements.
+ *
+ * @param {Element[]} elements - Elements to update text content for.
+ * @param {string} text - New text content.
+ * @returns {void}
+ *
+ * @example
+ * setTextContent([element], 'New text');
+ */
 function setTextContent(elements, text) {
     if (typeof text !== "string") {
         console.warn("Invalid text:", text);
@@ -653,10 +838,29 @@ function setTextContent(elements, text) {
     });
 }
 
+/**
+ * Removes specified elements from the DOM.
+ *
+ * @param {Element[]} elements - Elements to remove.
+ * @returns {void}
+ *
+ * @example
+ * removeElements([elementToRemove]);
+ */
 function removeElements(elements) {
     elements.forEach((el) => el.remove());
 }
 
+/**
+ * Sets HTML attributes for specified elements.
+ *
+ * @param {Element[]} elements - Elements to set attributes for.
+ * @param {Object} attributes - Key-value pairs of attributes.
+ * @returns {void}
+ *
+ * @example
+ * setAttributes([element], {id: 'new-id', class: 'new-class'});
+ */
 function setAttributes(elements, attributes) {
     if (!attributes || typeof attributes !== "object") {
         console.warn("Invalid attributes object:", attributes);
@@ -669,6 +873,16 @@ function setAttributes(elements, attributes) {
     });
 }
 
+/**
+ * Adds CSS classes to specified elements.
+ *
+ * @param {Element[]} elements - Elements to add classes to.
+ * @param {string} className - Space-separated class names.
+ * @returns {void}
+ *
+ * @example
+ * addClasses([element], 'highlight active');
+ */
 function addClasses(elements, className) {
     if (!className || typeof className !== "string") {
         console.warn("Invalid className:", className);
@@ -677,6 +891,16 @@ function addClasses(elements, className) {
     elements.forEach((el) => el.classList.add(...className.split(" ")));
 }
 
+/**
+ * Removes CSS classes from specified elements.
+ *
+ * @param {Element[]} elements - Elements to remove classes from.
+ * @param {string} className - Space-separated class names.
+ * @returns {void}
+ *
+ * @example
+ * removeClasses([element], 'highlight active');
+ */
 function removeClasses(elements, className) {
     if (!className || typeof className !== "string") {
         console.warn("Invalid className:", className);
@@ -729,7 +953,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true; // Indicate asynchronous response
 });
 
-// Function to send HTML to the backend API
+/**
+ * Sends HTML content to the backend for processing.
+ *
+ * @param {string} htmlContent - HTML content to send.
+ * @returns {Promise<Object>} Response from backend.
+ *
+ * @example
+ * const response = await sendHtmlToBackend('<div>Content</div>');
+ */
 async function sendHtmlToBackend(htmlContent) {
     const token = await fetchTokenFromPopup();
     const currentUrl = localStorage.getItem('currentUrl');
@@ -769,7 +1001,11 @@ async function sendHtmlToBackend(htmlContent) {
     }
 }
 
-// Function to extract and send HTML on page load
+/**
+ * Extracts relevant HTML content from the page and sends it to backend.
+ *
+ * @returns {Promise<void>}
+ */
 async function extractAndSendHtml() {
     fetchTokenFromPopup()
         .then(token => {
@@ -790,6 +1026,11 @@ async function extractAndSendHtml() {
 
 }
 
+/**
+ * Fetches authentication token from the extension popup.
+ *
+ * @returns {Promise<string>} Authentication token.
+ */
 const fetchTokenFromPopup = () => {
     return new Promise((resolve, reject) => {
         chrome.runtime.sendMessage({ action: 'getToken' }, (response) => {

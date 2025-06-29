@@ -26,7 +26,6 @@ function main() {
         }
     };
 
-    // Show Login UI
     function showLoginUI() {
         loginButton.style.display = 'block';
         applyChangesButton.style.display = 'none';
@@ -35,7 +34,6 @@ function main() {
         iconBar.style.display = 'none';
     }
 
-    // Show App UI
     function showAppUI() {
         loginButton.style.display = 'none';
         applyChangesButton.style.display = 'block';
@@ -200,7 +198,16 @@ function main() {
         }
     });
 
-    function sendMessageToContentScript(message) {
+    /**
+     * Sends a message to the content script of the active tab.
+     *
+     * @param {Object} message - Message to send to content script.
+     * @returns {Promise<any>} Response from the content script.
+     *
+     * @example
+     * await sendMessageToContentScript({ action: "highlight", data: {...} });
+     */
+    async function sendMessageToContentScript(message) {
         return new Promise((resolve, reject) => {
             chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 if (!tabs[0]?.id) {
@@ -370,14 +377,21 @@ function main() {
     }
 
     /**
-     * Step 4: Send Instructions to the Content Script
+     * Sends instructions to the background script for processing.
+     *
+     * @param {Object} parsedJson - Parsed JSON containing instructions.
+     * @param {Object} handlers - Map of handler functions.
+     * @returns {Promise<void>}
+     *
+     * @example
+     * await sendInstructionsToBackground({ instructions: [...] }, { highlight: fn });
      */
-    function sendInstructionsToBackground(parsedInstructions, handlers) {
+    async function sendInstructionsToBackground(parsedJson, handlers) {
         return new Promise((resolve, reject) => {
             chrome.runtime.sendMessage(
                 {
                     action: "applyChanges",
-                    instructions: parsedInstructions?.instructions,
+                    instructions: parsedJson?.instructions,
                     handlers
                 },
                 (response) => {
