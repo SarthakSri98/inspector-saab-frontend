@@ -1,0 +1,51 @@
+{
+    "manifest_version": 3,
+    "name": "Inspector Saab",
+    "version": "4.0",
+    "permissions": [
+        "storage",
+        "activeTab",
+        "scripting",
+        "tabs",
+        "windows"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "background": {
+        "service_worker": "dist/background.js",
+        "type": "module"
+    },
+    "action": {
+        "default_popup": "dist/popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "dist/content.js"
+            ],
+            "run_at": "document_start"
+        }
+    ],
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self';"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "dist/content.js"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
+    "icons": {
+        "16": "frontend/icons/icon16.png",
+        "48": "frontend/icons/icon48.png",
+        "128": "frontend/icons/icon128.png"
+    }
+}

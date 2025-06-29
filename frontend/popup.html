@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspector Saab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Background Styling */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: #7df9ff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+            width: 400px;
+            border: 4px solid black;
+        }
+
+        pre {
+            font-family: 'Inter', sans-serif;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            text-align: left;
+        }
+
+        /* Title */
+        h3 {
+            font-size: 2rem;
+            color: black;
+            margin-bottom: 20px;
+        }
+
+        /* Textarea */
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 12px;
+            font-size: 1rem;
+            border: 3px solid black;
+            border-radius: 8px;
+            background: #ffffff;
+            color: black;
+            outline: none;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        textarea:focus {
+            border-color: #000000;
+        }
+
+        /* Buttons */
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            background: #ffcc00;
+            border: 3px solid black;
+            border-radius: 8px;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px black;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 6px 6px 0px black;
+        }
+
+        /* Icon Bar */
+        .icon-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 10px;
+            padding-bottom: 0;
+            margin-top: 10px;
+        }
+
+        .icon-bar i {
+            font-size: 0.8rem;
+            color: black;
+            cursor: pointer;
+            transition: transform 0.2s;
+            padding: 6px;
+            border: 3px solid black;
+            border-radius: 8px;
+            background: #ffcc00;
+            box-shadow: 4px 4px 0px black;
+            margin: 0 5px
+        }
+
+        .icon-bar i:hover {
+            transform: translateY(-3px);
+            box-shadow: 6px 6px 0px black;
+        }
+
+        /* Dropdown */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            left: 10px;
+            margin-top: 8px;
+            background-color: #ffffff;
+            min-width: 150px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border: 3px solid black;
+            border-radius: 8px;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .profile-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .profile-info p {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .credits-info {
+            margin-bottom: 10px;
+        }
+
+        .credits-info p {
+            margin: 0;
+            font-size: 0.8rem;
+        }
+
+        .dropdown-content a {
+            color: black;
+            text-decoration: none;
+            display: block;
+            border-top: 1px solid black;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ffcc00;
+        }
+
+        .show {
+            display: block;
+        }
+
+        #status {
+            margin: 20px 0;
+        }
+
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            /* Could be more or less, depending on screen size */
+            max-height: 80vh;
+            /* Limit height to make it scrollable */
+            overflow-y: auto;
+            /* Enable vertical scrolling */
+            overflow-x: hidden;
+            /* Prevent horizontal scrolling */
+            box-sizing: border-box;
+            /* Include padding and border in element's total width and height */
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+            /* Prevent background scrolling */
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-out {
+            animation: fadeOut 0.5s forwards;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s forwards;
+        }
+
+        .textarea-container {
+            position: relative;
+            width: 100%;
+        }
+
+        #description {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .placeholder-text {
+            position: absolute;
+            font-size: 0.8rem;
+            top: 8px;
+            left: 10px;
+            color: rgb(170, 170, 170, 0.6);
+            pointer-events: none;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .fade-out {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        .fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .version {
+            display: inline-block;
+            transform: translateY(3px);
+            margin-left: -7px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="icon-bar">
+        <div class="dropdown">
+            <i class="fas fa-user" id="profileIcon"></i> <!-- Profile Icon -->
+            <div id="profileDropdown" class="dropdown-content">
+                <div class="profile-info">
+                    <img id="profilePic"
+                        src="https://www.kindpng.com/picc/m/260-2604775_michael-scott-michael-scott-funny-faces-hd-png.png"
+                        alt="User Image">
+                    <p id="userName">User Name</p>
+                </div>
+                <div class="credits-info">
+                    <p>Credits: <span id="userCredits">0</span></p>
+                </div>
+                <a href="#" id="logoutLink">Logout</a>
+            </div>
+        </div>
+        <div>
+            <i class="fas fa-cog" id="settingsIcon" style="margin-right: 0px"></i> <!-- Settings Icon -->
+            <i class="fas fa-question-circle" id="helpIcon" style="margin-right: 10px;"></i> <!-- Help Icon -->
+        </div>
+    </div>
+    <div>
+        <h3>✨ Inspector Saab <span class="version">v1</span> ✨</h3>
+        <div class="textarea-container">
+            <textarea id="description" placeholder=""></textarea>
+            <span id="placeholderText" class="placeholder-text">Ex: Change the background color to blue.</span>
+        </div>
+        <button id="applyChanges">Let's Do It! 🚀</button>
+        <button id="loginButton">Login with Google 🚀</button>
+        <p id="status"></p>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeHelpModal">&times;</span>
+            <h3>Help & Contact</h3>
+            <p>Email: your-email@example.com</p>
+            <p><a href="https://www.linkedin.com/in/yourprofile" target="_blank">Send a DM on Linkedin</a></p>
+            <pre>
+What is Inspector Saab?
+Inspector Saab is your personal website customizer, allowing you to modify any webpage using simple, natural language commands. Whether you want to change colors, update text, adjust layouts, or add new elements, just describe it, and Inspector Saab will make it happen—no coding needed!
+
+How Can It Help You?
+✅ Instant UI Customization – Change colors, fonts, and layouts in real-time.
+✅ Live Content Editing – Modify text, images, and links effortlessly.
+✅ Quick Prototyping & Testing – Visualize design changes before implementing them.
+✅ Enhance Productivity – Hide distractions, restructure elements, or simplify interfaces.
+
+A Few Things to Keep in Mind
+Inspector Saab is constantly evolving, and while it's already powerful, some advanced modifications may have limitations depending on webpage structures. It works best on static content, while complex interactive elements or highly dynamic sites may have varied results. Your feedback helps make it better every day! 🚀
+
+👉 Tip: Be specific in your instructions for the best results! Example:
+✔️ "Make all buttons blue" (✅ Works well)
+❌ "Make this site better" (🚨 Too vague, AI needs clearer instructions)
+
+Enjoy experimenting with the web, your way! 🎨✨
+            </pre>
+        </div>
+    </div>
+
+    <script type="module" src="./popup.js"></script>
+</body>
+
+</html>
