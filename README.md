@@ -15,6 +15,13 @@ A powerful browser extension that lets you customize any webpage using natural l
 - **Persistent Changes**: Options to save your customizations
 - **Interactive UI**: User-friendly popup interface with real-time feedback
 
+## 🚀 Demo
+
+[![Watch the Demo](https://img.youtube.com/vi/8Ca8_znZgu8/0.jpg)](https://www.youtube.com/watch?v=8Ca8_znZgu8)
+
+<img width="409" alt="Screenshot 2025-06-03 at 1 08 46 AM" src="https://github.com/user-attachments/assets/5411d2bf-f05e-45ca-891d-3962ac230873" />
+
+
 ## 🏗️ Architecture
 
 The extension follows a modular architecture with three main components:
