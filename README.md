@@ -16,8 +16,10 @@ A powerful browser extension that lets you customize any webpage using natural l
 - **Interactive UI**: User-friendly popup interface with real-time feedback
 
 ## 🚀 Demo
-
-[![Watch the Demo](https://img.youtube.com/vi/8Ca8_znZgu8/0.jpg)](https://www.youtube.com/watch?v=8Ca8_znZgu8)
+# Video
+<a href="https://www.youtube.com/watch?v=8Ca8_znZgu8" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.youtube.com/vi/8Ca8_znZgu8/0.jpg" alt="Watch the Demo">
+</a>
 
 <img width="409" alt="Screenshot 2025-06-03 at 1 08 46 AM" src="https://github.com/user-attachments/assets/5411d2bf-f05e-45ca-891d-3962ac230873" />
 
