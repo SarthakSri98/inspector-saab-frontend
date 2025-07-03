@@ -267,6 +267,13 @@
             position: relative;
             width: 100%;
         }
+        .cross-icon{
+            position: absolute;
+            top: 0;
+            right: 0;
+            cursor: pointer;
+            margin: 8px;
+        }
 
         #description {
             width: 100%;
@@ -329,6 +336,11 @@
         <div class="textarea-container">
             <textarea id="description" placeholder=""></textarea>
             <span id="placeholderText" class="placeholder-text">Ex: Change the background color to blue.</span>
+            <div class="cross-icon">
+                <svg width="13" height="13" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M0.273985 2.30391C-0.124672 1.74341 -0.0882695 0.933084 0.383092 0.418212C0.893733 -0.139565 1.72148 -0.13938 2.23191 0.418626L9.25 8.09082L16.2681 0.418626C16.7785 -0.13938 17.6063 -0.139565 18.1169 0.418212C18.5883 0.933084 18.6247 1.74341 18.226 2.30391L18.1173 2.43852L11.1987 10.0029L18.1169 17.5611C18.5883 18.0759 18.6247 18.8863 18.226 19.4468L18.1173 19.5814C17.6461 20.0965 16.9046 20.1362 16.3916 19.7006L16.2685 19.5818L9.25 11.9155L2.23153 19.5818L2.10835 19.7006C1.59542 20.1362 0.853882 20.0965 0.382714 19.5814L0.273985 19.4468C-0.124672 18.8863 -0.0882694 18.0759 0.383092 17.5611L7.30134 10.0029L0.382714 2.43852L0.273985 2.30391Z" fill="red"/>
+                </svg>
+              </div>
         </div>
         <button id="applyChanges" title="Apply this command to the current website">Let's Do It! 🚀</button>
         <button id="loginButton">Login with Google 🚀</button>

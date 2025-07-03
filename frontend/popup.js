@@ -13,6 +13,12 @@ function main() {
     const descriptionArea = document.getElementById('description');
     const statusMessage = document.getElementById('status');
     const iconBar = document.getElementsByClassName('icon-bar')[0];
+    const crossIcon = document.getElementsByClassName('cross-icon')[0];    
+
+    crossIcon.addEventListener("click",  () => {
+        const description = document.getElementById("description");
+        description.value='';
+    })
 
     // Check if User is Logged In
     window.onload = () => {
