@@ -36,6 +36,7 @@ function main() {
         loginButton.style.display = 'block';
         applyChangesButton.style.display = 'none';
         descriptionArea.style.display = 'none';
+        crossIcon.style.display = 'none';
         statusMessage.textContent = "Please log in to continue.";
         iconBar.style.display = 'none';
     }
@@ -44,6 +45,7 @@ function main() {
         loginButton.style.display = 'none';
         applyChangesButton.style.display = 'block';
         descriptionArea.style.display = 'block';
+        crossIcon.style.display = 'block';
         statusMessage.textContent = "Welcome! My friend.";
         iconBar.style.display = '';
         // Fetch user info from localStorage
