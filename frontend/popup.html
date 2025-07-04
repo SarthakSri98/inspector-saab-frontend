@@ -274,6 +274,13 @@
             cursor: pointer;
             margin: 8px;
         }
+        #description:placeholder-shown ~ .cross-icon {
+            display: none;
+        }
+
+        #description:not(:placeholder-shown) ~ .cross-icon {
+            display: block;
+        } 
 
         #description {
             width: 100%;

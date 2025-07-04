@@ -45,7 +45,6 @@ function main() {
         loginButton.style.display = 'none';
         applyChangesButton.style.display = 'block';
         descriptionArea.style.display = 'block';
-        crossIcon.style.display = 'block';
         statusMessage.textContent = "Welcome! My friend.";
         iconBar.style.display = '';
         // Fetch user info from localStorage
