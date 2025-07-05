@@ -13,6 +13,12 @@ function main() {
     const descriptionArea = document.getElementById('description');
     const statusMessage = document.getElementById('status');
     const iconBar = document.getElementsByClassName('icon-bar')[0];
+    const crossIcon = document.getElementsByClassName('cross-icon')[0];    
+
+    crossIcon.addEventListener("click",  () => {
+        const description = document.getElementById("description");
+        description.value='';
+    })
 
     // Check if User is Logged In
     window.onload = () => {
@@ -30,6 +36,7 @@ function main() {
         loginButton.style.display = 'block';
         applyChangesButton.style.display = 'none';
         descriptionArea.style.display = 'none';
+        crossIcon.style.display = 'none';
         statusMessage.textContent = "Please log in to continue.";
         iconBar.style.display = 'none';
     }
